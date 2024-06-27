@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       - name: Set up Python version
         uses: actions/setup-python@v2ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.

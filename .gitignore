@@ -20,3 +20,4 @@ env/
 
 # Ignorer les fichiers générés par Jupyter Notebook
 .ipynb_checkpoints/
+P07_server_api.ipynb

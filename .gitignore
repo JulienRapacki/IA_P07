@@ -1,0 +1,22 @@
+# Ignorer les fichiers de configuration
+config.json
+
+# Ignorer les répertoires de logs
+logs/
+*.log
+
+# Ignorer les fichiers de compilation
+*.class
+*.pyc
+__pycache__/
+
+# Ignorer les environnements virtuels
+venv/
+env/
+
+# Ignorer les fichiers spécifiques aux IDE
+.vscode/
+.idea/
+
+# Ignorer les fichiers générés par Jupyter Notebook
+.ipynb_checkpoints/

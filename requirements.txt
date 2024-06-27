@@ -1,4 +1,4 @@
 Flask
 nltk
 numpy
-tensorflow-cpu==2.3.0
+tensorflow-cpu

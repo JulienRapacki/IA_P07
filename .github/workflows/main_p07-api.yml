@@ -15,12 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Python version
-        uses: actions/setup-python@v2
-        
-        with:        
+        uses: actions/setup-python@v1
+        with:
           python-version: '3.12'
 
       - name: Create and start virtual environment
@@ -32,12 +31,7 @@ jobs:
         run: pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-      - name: Install pytest
-        run: pytest
-        
-      - name: Run tests
-      - run:  pip install -r requirements.txt
-        
+
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
@@ -69,11 +63,11 @@ jobs:
 
       
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_66032CA5335740FE8035F6FF60BFC6CB }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7BA4BCD32851496CA7C4B7128A27F41D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7E968C7A34BA4CDB8553CB35F74A198B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BFFE1D45685E4E328B3D7ADBEA2AFC6A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_20848C7AD23742D4A3580F2538142FC0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D95B957A79E44FCCA92C6EDF31C010E1 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2

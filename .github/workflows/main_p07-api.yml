@@ -18,8 +18,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Python version
-        uses: actions/setup-python@v2ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.ttps://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/.
-        with:
+        uses: actions/setup-python@v2
+        
           python-version: '3.12'
 
       - name: Create and start virtual environment

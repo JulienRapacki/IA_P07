@@ -107,6 +107,7 @@ def home():
 
 
 @app.route('/predict_sentiment', methods=['POST'])
+
 def predict():
     data = request.json
 
@@ -116,10 +117,10 @@ def predict():
     results = predict_sentiment(text)
 
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
-from threading import Thread
+# from threading import Thread
 
-def run_flask():
-    app.run(port=5000)
+# def run_flask():
+#     app.run(port=5000)
 
-flask_thread = Thread(target=run_flask)
-flask_thread.start()
+# flask_thread = Thread(target=run_flask)
+# flask_thread.start()

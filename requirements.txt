@@ -2,4 +2,3 @@ Flask
 nltk
 numpy
 tensorflow-cpu==2.8.0
-pickle

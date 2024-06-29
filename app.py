@@ -2,9 +2,9 @@
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
-import time
+
+
 import re
 
 import pickle
@@ -16,11 +16,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
-# pour le modèle simple
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-# pour le modèle LSTM
 
 # Deep learning
 import tensorflow as tf

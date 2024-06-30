@@ -2,3 +2,5 @@ Flask
 nltk
 numpy
 tensorflow
+pandas
+matplotlib

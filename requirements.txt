@@ -1,6 +1,3 @@
 Flask
 nltk
-numpy
-tensorflow
-pandas
-matplotlib
+tensorflow-cpu

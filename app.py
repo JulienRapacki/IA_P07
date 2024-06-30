@@ -1,5 +1,5 @@
 import pickle
-
+import numpy
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -14,7 +14,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
 
-
+from flask import Flask, request, jsonify, send_file
 
 # téléchargement des bases de caractères
 nltk.download("stopwords")
@@ -82,7 +82,7 @@ def predict_sentiment(text):
 
 clf_model = load_model('./model_lstm_glove.h5')
 
-from flask import Flask, request, jsonify
+
 
 app = Flask(__name__)
 

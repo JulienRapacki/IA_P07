@@ -1,10 +1,3 @@
-
-import numpy as np
-import pandas as pd
-
-
-import re
-
 import pickle
 
 # pre-traitement du text

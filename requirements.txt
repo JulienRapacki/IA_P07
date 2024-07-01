@@ -1,4 +1,4 @@
 Flask
 nltk
 numpy
-tensorflow
+tensorflow==2.15.1

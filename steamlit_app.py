@@ -5,7 +5,7 @@ import requests
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 
 def get_sentiment(text):
-    response = requests.post(API_URL, json={"text": text})
+    response = requests.post(API_URL, params={"text": text})
     if response.status_code == 200:
         return response.json()["sentiment"]
     else:

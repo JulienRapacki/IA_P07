@@ -86,26 +86,20 @@ clf_model = load_model('./model_lstm_glove.h5')
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Hello, welcome on the sentiment classification API project 07!"
-
-
-@app.route('/predict_sentiment', methods=['POST'])
-
+# This is the route to the API
+@app.route("/predict_sentiment", methods=["POST"])
 def predict():
-    data = request.json
 
-    #insertion du modèle
+    # Get the text included in the request
     text = request.args['text']
 
+    # Process the text in order to get the sentiment
     results = predict_sentiment(text)
 
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
-# from threading import Thread
 
-# def run_flask():
-#     app.run(port=5000)
+# This is the reoute to the welcome page
+@app.route("/")
+def home():
+    return "Hello, welcome to the sentiment classification API for project 07 !"
 
-# flask_thread = Thread(target=run_flask)
-# flask_thread.start()

@@ -66,7 +66,7 @@ def predict_sentiment(text):
 
         # Let's get the index sequences from the tokenizer
         index_sequence = pad_sequences(tokenizer.texts_to_sequences([text]),
-                                    maxlen = MAX_SEQUENCE_LENGTH)
+                                    maxlen = MAX_SEQUENCE_LENGTH,padding='post')
 
         probability_score = clf_model.predict(index_sequence)[0][0]
 

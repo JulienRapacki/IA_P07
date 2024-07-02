@@ -1,18 +1,11 @@
 import pickle
 import numpy
+
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from nltk.stem import SnowballStemmer
-
-from applicationinsights import TelemetryClient
-from applicationinsights.logging import LoggingHandler
-import logging
-
-
-
 
 # Deep learning
 import tensorflow as tf
@@ -29,8 +22,7 @@ nltk.download('wordnet')
 stop = set(stopwords.words('english'))
 
 
-# regex permettant d'ignorer les caractères spéciaux ainsi que les nombres et les mots contenant des underscores
-
+# Fonction pour le preprocessing
 def preprocess(text) :
 
     def tokenize(text):
@@ -63,8 +55,7 @@ MAX_SEQUENCE_LENGTH =30
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 
-
-
+#Fonction de prédiction
 def predict_sentiment(text):
 
         # First let's preprocess the text in the same way than for the training
@@ -89,30 +80,13 @@ def predict_sentiment(text):
 clf_model = load_model('./model_lstm_glove.h5')
 
 
-
+#Partie API
 app = Flask(__name__)
 
-tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
-
-# Configuration du logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(LoggingHandler(tc))
-
-# This is the route to the API
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
-
-    # Get the text included in the request
     text = request.args['text']
-
-    # Process the text in order to get the sentiment
     results = predict_sentiment(text)
-    logger.info(f"Sentiment analysis: '{text}' -> {sentiment}")
-    
-    # Suivi des événements personnalisés
-    tc.track_event('SentimentAnalysis', {'text': text, 'sentiment': sentiment})
-    
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
 # This is the reoute to the welcome page

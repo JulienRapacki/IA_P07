@@ -7,6 +7,14 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
+from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.trace.samplers import ProbabilitySampler
+from opencensus.trace.tracer import Tracer
+from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+import logging
+
+
+
 
 # Deep learning
 import tensorflow as tf
@@ -85,6 +93,18 @@ clf_model = load_model('./model_lstm_glove.h5')
 
 
 app = Flask(__name__)
+
+INSTRUMENTATION_KEY ='3702b2ba-5fab-46e7-8c1b-b4e13381c925'
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string=f'InstrumentationKey={INSTRUMENTATION_KEY}'),
+    sampler=ProbabilitySampler(rate=1.0),
+)
+
+# Configuration du logger
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(
+    connection_string=f'InstrumentationKey={INSTRUMENTATION_KEY}')
 
 # This is the route to the API
 @app.route("/predict_sentiment", methods=["POST"])

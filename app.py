@@ -78,7 +78,7 @@ def predict_sentiment(text):
 
         # Compte-tenu  du résultat de la courbe ROC-AUC, on préfèrera mettre un seuil à 0.6
         # pour la proba afin de limiter les faux positifs
-        if probability_score < 0.6:
+        if probability_score < 0.5:
             sentiment = "negative"
         else:
             sentiment = "positive"
@@ -92,7 +92,7 @@ clf_model = load_model('./model_lstm_glove.h5')
 
 app = Flask(__name__)
 
-tc = TelemetryClient()
+tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
 
 # Configuration du logger
 logger = logging.getLogger(__name__)

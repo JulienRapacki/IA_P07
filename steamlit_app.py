@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
-
 from applicationinsights import TelemetryClient
+
+
 
 # URL de votre API Azure
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"

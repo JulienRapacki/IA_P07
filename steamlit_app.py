@@ -1,33 +1,13 @@
 import streamlit as st
 import requests
 
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.trace.samplers import ProbabilitySampler
-from opencensus.trace.tracer import Tracer
-import logging
+from applicationinsights import TelemetryClient
 
 # URL de votre API Azure
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 
 # Configuration d'Application Insights
-INSTRUMENTATION_KEY = '3702b2ba-5fab-46e7-8c1b-b4e13381c925'
-
-# Configuration du logger
-logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(
-    connection_string=f'InstrumentationKey={INSTRUMENTATION_KEY}')
-)
-
-# Configuration du tracer
-tracer = Tracer(
-    exporter=AzureExporter(connection_string=f'InstrumentationKey={INSTRUMENTATION_KEY}'),
-    sampler=ProbabilitySampler(1.0),
-)
-
-
-
-
+tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
 
 
 def get_sentiment(text):
@@ -41,14 +21,46 @@ st.title("Analyse de sentiment")
 
 user_input = st.text_area("Entrez votre phrase ici :")
 
+ipythonCopyimport streamlit as st
+import requests
+from applicationinsights import TelemetryClient
+
+# Initialisation du client Application Insights
+# Remplacez 'votre-clé-instrumentation' par la vraie clé
+tc = TelemetryClient('votre-clé-instrumentation')
+
+API_URL = "https://votre-api-azure.com/sentiment"
+
+def get_sentiment(text):
+    response = requests.post(API_URL, json={"text": text})
+    if response.status_code == 200:
+        return response.json()["sentiment"]
+    else:
+        return "Erreur lors de l'appel à l'API"
+
+st.title("Analyse de sentiment")
+
+user_input = st.text_area("Entrez votre phrase ici :")
+
 if st.button("Analyser le sentiment"):
     if user_input:
-        with tracer.span(name="analyze_sentiment"):
-            sentiment = get_sentiment(user_input)
-            st.write(f"Le sentiment de la phrase est : {sentiment}")
-            
-            # Suivi des prédictions non conformes
-            if sentiment not in ['positif', 'négatif']:
-                logger.warning(f"Prédiction non conforme: '{user_input}' -> {sentiment}")
+        sentiment = get_sentiment(user_input)
+        st.write(f"Le sentiment de la phrase est : {sentiment}")
+        
+        # Enregistrement de l'analyse
+        tc.track_event('SentimentAnalysisRequested', {'text': user_input, 'sentiment': sentiment})
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Prédiction conforme"):
+                tc.track_event('PredictionConfirmed', {'text': user_input, 'sentiment': sentiment})
+                st.success("Merci pour votre confirmation!")
+        with col2:
+            if st.button("Prédiction non conforme"):
+                tc.track_event('PredictionDisputed', {'text': user_input, 'sentiment': sentiment})
+                st.error("Merci pour votre signalement. Nous allons examiner cette prédiction.")
     else:
         st.write("Veuillez entrer une phrase à analyser.")
+
+# Assurez-vous d'envoyer les télémétries à la fin
+tc.flush()

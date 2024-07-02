@@ -2,9 +2,6 @@ import streamlit as st
 import requests
 
 
-
-
-# URL de votre API Azure
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 
 def get_sentiment(text):

@@ -44,4 +44,4 @@ if st.button("Analyser le sentiment"):
         st.write("Veuillez entrer une phrase à analyser.")
 
 # Assurez-vous d'envoyer les télémétries à la fin
-tc.flush()
+# tc.flush()

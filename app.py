@@ -67,7 +67,7 @@ with open("./tokenizer_lstm.pickle", "rb") as file:
 
 
 def predict_sentiment(text):
-        clf_model = tf.keras.models.load_model('./model_lstm_glove.h5')
+        clf_model = load_model('./model_lstm_glove.h5')
     
         # First let's preprocess the text in the same way than for the training
         text = preprocess(text)

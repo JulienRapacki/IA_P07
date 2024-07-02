@@ -1,5 +1,6 @@
 import pickle
 import numpy
+import re
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -76,8 +77,6 @@ def predict_sentiment(text):
 
         probability_score = clf_model.predict(index_sequence)[0][0]
 
-        # Compte-tenu  du résultat de la courbe ROC-AUC, on préfèrera mettre un seuil à 0.6
-        # pour la proba afin de limiter les faux positifs
         if probability_score < 0.5:
             sentiment = "negative"
         else:
@@ -98,6 +97,15 @@ tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(LoggingHandler(tc))
+
+clf_model = None
+
+@app.before_first_request
+def load_model():
+    global clf_model
+    clf_model = load_model('./model_lstm_glove.h5')
+
+
 
 # This is the route to the API
 @app.route("/predict_sentiment", methods=["POST"])

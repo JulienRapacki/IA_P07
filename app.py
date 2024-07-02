@@ -67,7 +67,8 @@ with open("./tokenizer_lstm.pickle", "rb") as file:
 
 
 def predict_sentiment(text):
-
+        clf_model = tf.keras.models.load_model('./model_lstm_glove.h5')
+    
         # First let's preprocess the text in the same way than for the training
         text = preprocess(text)
 
@@ -84,11 +85,7 @@ def predict_sentiment(text):
 
         return sentiment, probability_score
 
-
-clf_model = load_model('./model_lstm_glove.h5')
-
-
-
+# partie dédiée à l'API
 app = Flask(__name__)
 
 tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
@@ -98,16 +95,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(LoggingHandler(tc))
 
-clf_model = None
 
-@app.before_first_request
-def load_model():
-    global clf_model
-    clf_model = load_model('./model_lstm_glove.h5')
-
-
-
-# This is the route to the API
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
 

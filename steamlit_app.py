@@ -5,8 +5,7 @@ import requests
 # URL de votre API Azure
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 
-# Configuration d'Application Insights
-tc = TelemetryClient( '7041f9ba-42f6-4ca8-9b3f-bd436fca5122')
+
 
 
 def get_sentiment(text):

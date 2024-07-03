@@ -1,9 +1,6 @@
 import streamlit as st
 import requests
 
-from applicationinsights import TelemetryClient
-import atexit
-
 
 # URL de votre API Azure
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
@@ -23,41 +20,19 @@ st.title("Analyse de sentiment")
 
 user_input = st.text_area("Entrez votre phrase ici :")
 
-if st.button("Analyser le sentiment"):
-    if user_input:
-        sentiment = get_sentiment(user_input)
-        st.write(f"Le sentiment de la phrase est : {sentiment}")
-        
-        # Enregistrement de l'analyse
-        tc.track_event('SentimentAnalysisRequested', {'text': user_input, 'sentiment': sentiment})
-        tc.flush()
-        
-        # Utilisation des variables d'état pour les boutons de confirmation
-        if "feedback" not in st.session_state:
-            st.session_state.feedback = None
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("Prédiction conforme"):
-                st.session_state.feedback = "conforme"
-                st.write("Prédiction conforme cliquée")
-        with col2:
-            if st.button("Prédiction non conforme"):
-                st.session_state.feedback = "non conforme"
-        
-        if st.session_state.feedback == "conforme":
-            tc.track_event('PredictionConfirmed', {'text': user_input, 'sentiment': sentiment})
-            st.success("Merci pour votre confirmation!")
-            st.session_state.feedback = None  # Reset feedback state
-            tc.flush()
-        
-        if st.session_state.feedback == "non conforme":
-            tc.track_event('PredictionDisputed', {'text': user_input, 'sentiment': sentiment})
-            st.error("Merci pour votre signalement. Nous allons examiner cette prédiction.")
-            st.session_state.feedback = None  # Reset feedback state
-            tc.flush()
-    else:
-        st.write("Veuillez entrer une phrase à analyser.")
+if st.button("Analyser"):
+    response = requests.post(f"{API_URL}/predict", json={"text": text})
+    prediction = response.json()['sentiment']
+    st.write(f"Sentiment prédit : {prediction}")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Prédiction correcte"):
+            requests.post(f"{API_URL}/feedback", json={"prediction": prediction, "is_correct": True})
+            st.success("Merci pour votre feedback !")
+    with col2:
+        if st.button("Prédiction incorrecte"):
+            requests.post(f"{API_URL}/feedback", json={"prediction": prediction, "is_correct": False})
+            st.success("Merci pour votre feedback !")
         
 atexit.register(tc.flush)

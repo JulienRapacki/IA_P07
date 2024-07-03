@@ -11,7 +11,7 @@ st.title("Analyse de sentiment")
 user_input = st.text_area("Entrez votre phrase ici :")
 
 if st.button("Analyser"):
-    response = requests.post(f"{API_URL}/predict_sentiment, params={"text": user_input})
+    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = repsonse.json()['probability']
     st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")

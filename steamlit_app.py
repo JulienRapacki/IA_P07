@@ -9,7 +9,7 @@ from applicationinsights import TelemetryClient
 API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 
 # Configuration d'Application Insights
-tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
+tc = TelemetryClient( '7041f9ba-42f6-4ca8-9b3f-bd436fca5122')
 
 
 def get_sentiment(text):

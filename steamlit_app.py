@@ -34,12 +34,23 @@ if st.button("Analyser le sentiment"):
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Prédiction conforme"):
-                tc.track_event('PredictionConfirmed', {'text': user_input, 'sentiment': sentiment})
-                st.success("Merci pour votre confirmation!")
+                st.session_state.feedback = "conforme"
+        
         with col2:
             if st.button("Prédiction non conforme"):
-                tc.track_event('PredictionDisputed', {'text': user_input, 'sentiment': sentiment})
-                st.error("Merci pour votre signalement. Nous allons examiner cette prédiction.")
+                st.session_state.feedback = "non conforme"
+        
+        if st.session_state.feedback == "conforme":
+            tc.track_event('PredictionConfirmed', {'text': user_input, 'sentiment': sentiment})
+            st.success("Merci pour votre confirmation!")
+            st.session_state.feedback = None  # Reset feedback state
+            tc.flush()
+        
+        if st.session_state.feedback == "non conforme":
+            tc.track_event('PredictionDisputed', {'text': user_input, 'sentiment': sentiment})
+            st.error("Merci pour votre signalement. Nous allons examiner cette prédiction.")
+            st.session_state.feedback = None  # Reset feedback state
+            tc.flush()
     else:
         st.write("Veuillez entrer une phrase à analyser.")
 

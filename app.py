@@ -78,9 +78,9 @@ def predict_sentiment(text):
         probability_score = clf_model.predict(index_sequence)[0][0]
 
         if probability_score < 0.5:
-            sentiment = "negative"
+            sentiment = "negatif"
         else:
-            sentiment = "positive"
+            sentiment = "positif"
 
         return sentiment, probability_score
 
@@ -108,8 +108,8 @@ def predict():
     
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    prediction = request.json['prediction']
-    is_correct = request.json['is_correct']
+    prediction = request.args['prediction']
+    is_correct = request.args.get('is_correct') == 'True'
     
     if is_correct:
         logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})

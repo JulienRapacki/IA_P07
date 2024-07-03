@@ -3,7 +3,7 @@ import requests
 
 
 # URL de votre API Azure
-API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
+API_URL = "https://p07-api.azurewebsites.net"
 
 
 st.title("Analyse de sentiment")
@@ -11,9 +11,10 @@ st.title("Analyse de sentiment")
 user_input = st.text_area("Entrez votre phrase ici :")
 
 if st.button("Analyser"):
-    response = requests.post(API_URL, params={"text": user_input})
+    response = requests.post(f"{API_URL}/predict_sentiment, params={"text": user_input})
     prediction = response.json()['sentiment']
-    st.write(f"Sentiment prédit : {prediction}")
+    probability = repsonse.json()['probability']
+    st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")
 
     col1, col2 = st.columns(2)
     with col1:

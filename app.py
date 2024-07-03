@@ -108,7 +108,7 @@ def predict():
     
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    prediction = request.args['prediction']
+    prediction = request.args.get('prediction')
     is_correct = request.args.get('is_correct') == 'True'
     
     if is_correct:

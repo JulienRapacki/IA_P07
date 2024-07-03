@@ -88,7 +88,7 @@ def predict_sentiment(text):
 # partie dédiée à l'API
 app = Flask(__name__)
 
-tc = TelemetryClient( '3702b2ba-5fab-46e7-8c1b-b4e13381c925')
+tc = TelemetryClient( '7041f9ba-42f6-4ca8-9b3f-bd436fca5122')
 
 # Configuration du logger
 logger = logging.getLogger(__name__)

@@ -33,5 +33,4 @@ if st.button("Analyser"):
         if st.button("Prédiction incorrecte"):
             requests.post(f"{API_URL}/feedback", json={"prediction": prediction, "is_correct": False})
             st.success("Merci pour votre feedback !")
-        
-atexit.register(tc.flush)
+

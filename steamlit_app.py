@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 from applicationinsights import TelemetryClient
-
+import atexit
 
 
 # URL de votre API Azure
@@ -41,7 +41,7 @@ if st.button("Analyser le sentiment"):
         with col1:
             if st.button("Prédiction conforme"):
                 st.session_state.feedback = "conforme"
-        
+                st.write("Prédiction conforme cliquée")
         with col2:
             if st.button("Prédiction non conforme"):
                 st.session_state.feedback = "non conforme"
@@ -59,4 +59,5 @@ if st.button("Analyser le sentiment"):
             tc.flush()
     else:
         st.write("Veuillez entrer une phrase à analyser.")
-
+        
+atexit.register(tc.flush)

@@ -13,7 +13,7 @@ tc = TelemetryClient( '7041f9ba-42f6-4ca8-9b3f-bd436fca5122')
 
 
 def get_sentiment(text):
-    response = requests.post(API_URL, params={"text": text})
+    response = requests.post(API_URL, json={"text": text})
     if response.status_code == 200:
         return response.json()["sentiment"]
     else:

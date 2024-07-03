@@ -30,8 +30,14 @@ if st.button("Analyser le sentiment"):
         
         # Enregistrement de l'analyse
         tc.track_event('SentimentAnalysisRequested', {'text': user_input, 'sentiment': sentiment})
+        tc.flush()
+        
+        # Utilisation des variables d'état pour les boutons de confirmation
+        if "feedback" not in st.session_state:
+            st.session_state.feedback = None
         
         col1, col2 = st.columns(2)
+        
         with col1:
             if st.button("Prédiction conforme"):
                 st.session_state.feedback = "conforme"
@@ -54,5 +60,3 @@ if st.button("Analyser le sentiment"):
     else:
         st.write("Veuillez entrer une phrase à analyser.")
 
-# Assurez-vous d'envoyer les télémétries à la fin
-tc.flush()

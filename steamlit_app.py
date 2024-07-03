@@ -7,9 +7,17 @@ API_URL = "https://p07-api.azurewebsites.net/predict_sentiment"
 def get_sentiment(text):
     response = requests.post(API_URL, params={"text": text})
     if response.status_code == 200:
-        return response.json()["sentiment"]
+        return response.json()["sentiment"],response.json()["probability"]
     else:
         return "Erreur lors de l'appel à l'API"
+
+def send_feedback(prediction, is_correct):
+    response = requests.post(
+        f'{API_BASE_URL}/feedback',
+        json={'prediction': prediction, 'is_correct': is_correct}
+    )
+
+
 
 st.title("Analyse de sentiment")
 
@@ -18,15 +26,14 @@ user_input = st.text_area("Entrez votre phrase ici :")
 if st.button("Analyser le sentiment"):
     if user_input:
         sentiment = get_sentiment(user_input)
-        st.write(f"Le sentiment de la phrase est : {sentiment}")
+        st.write(f"Le sentiment de la phrase est : {sentiment},{probability}")
               
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("Prédiction conforme"):
-                st.success("Merci pour votre confirmation!")
-        with col2:
-            if st.button("Prédiction non conforme"):
-                st.error("Merci pour votre signalement. Nous allons examiner cette prédiction.")
+        if st.button('Feedback : Prédiction correcte'):
+            send_feedback(sentiment, True)
+            st.write('Merci pour votre feedback !')
+        if st.button('Feedback : Prédiction incorrecte'):
+            send_feedback(sentiment, False)
+            st.write('Merci pour votre feedback !')
     else:
         st.write("Veuillez entrer une phrase à analyser.")
 

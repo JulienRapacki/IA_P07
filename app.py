@@ -8,8 +8,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
-from applicationinsights import TelemetryClient
-from applicationinsights.logging import LoggingHandler
+from opencensus.ext.azure.log_exporter import AzureLogHandler
 import logging
 
 
@@ -88,12 +87,12 @@ def predict_sentiment(text):
 # partie dédiée à l'API
 app = Flask(__name__)
 
-tc = TelemetryClient( '7041f9ba-42f6-4ca8-9b3f-bd436fca5122')
+ 
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(LoggingHandler(tc))
+logger.addHandler(AzureLogHandler(
+    connection_string='InstrumentationKey='7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
 
 
 @app.route("/predict_sentiment", methods=["POST"])
@@ -101,15 +100,23 @@ def predict():
 
     # Get the text included in the request
     text = request.args['text']
-
+    
     # Process the text in order to get the sentiment
     results = predict_sentiment(text)
-    logger.info(f"Sentiment analysis: '{text}' -> {sentiment}")
-    
-    # Suivi des événements personnalisés
-    tc.track_event('SentimentAnalysis', {'text': text, 'sentiment': sentiment})
     
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
+    
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    prediction = request.json['prediction']
+    is_correct = request.json['is_correct']
+    
+    if is_correct:
+        logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})
+    else:
+        logger.info('Prediction incorrecte', extra={'custom_dimensions': {'prediction': prediction}})
+    
+    return jsonify({'status': 'success'})
 
 # This is the reoute to the welcome page
 @app.route("/")

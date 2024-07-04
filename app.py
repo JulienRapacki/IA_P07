@@ -63,10 +63,12 @@ MAX_SEQUENCE_LENGTH =30
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 
+#chargement du modèle
+clf_model = load_model('./model_lstm_glove.h5')
 
 
 def predict_sentiment(text):
-        clf_model = load_model('./model_lstm_glove.h5')
+        
     
         # First let's preprocess the text in the same way than for the training
         text = preprocess(text)

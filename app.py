@@ -93,6 +93,7 @@ app = Flask(__name__)
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
 

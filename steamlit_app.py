@@ -3,7 +3,7 @@ import requests
 
 
 # URL de votre API Azure
-API_URL = "https://p07-api.azurewebsites.net"
+API_URL = "p07-insights.azurewebsites.net"
 
 
 st.title("Analyse de sentiment")

@@ -16,19 +16,18 @@ if st.button("Analyser"):
     probability = response.json()['probability']
     st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Prédiction correcte"):
-            requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
-            if feedback_response.status_code == 200:
-                st.write("Merci pour votre feedback !")
-            else:
-                st.write("Erreur lors de l'envoi du feedback.")
-    with col2:
-        if st.button("Prédiction incorrecte"):
-            requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})
-            if feedback_response.status_code == 200:
-                st.write("Merci pour votre feedback !")
-            else:
-                st.write("Erreur lors de l'envoi du feedback.")
+
+if st.button("Prédiction correcte"):
+    requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
+    if feedback_response.status_code == 200:
+        st.write("Merci pour votre feedback !")
+    else:
+        st.write("Erreur lors de l'envoi du feedback.")
+
+if st.button("Prédiction incorrecte"):
+    requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})
+    if feedback_response.status_code == 200:
+        st.write("Merci pour votre feedback !")
+    else:
+        st.write("Erreur lors de l'envoi du feedback.")
 

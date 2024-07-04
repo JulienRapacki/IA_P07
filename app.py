@@ -115,9 +115,9 @@ def feedback():
     is_correct = request.args['is_correct'] == 'True'
     
     if is_correct:
-        logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': sentiment}})
+        logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})
     else:
-        logger.info('Prediction incorrecte', extra={'custom_dimensions': {'prediction': sentiment}})
+        logger.info('Prediction incorrecte', extra={'custom_dimensions': {'prediction': prediction}})
     
     return jsonify({'status': 'success'})
 

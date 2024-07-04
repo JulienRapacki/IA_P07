@@ -110,8 +110,8 @@ def predict():
     
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    prediction = request.args.get('prediction')
-    is_correct = request.args.get('is_correct') == 'True'
+    prediction = request.args['prediction']
+    is_correct = request.args['is_correct'] == 'True'
     
     if is_correct:
         logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})

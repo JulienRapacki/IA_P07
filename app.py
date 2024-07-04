@@ -111,13 +111,13 @@ def predict():
     
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    prediction = request.args['prediction']
+    prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] == 'True'
     
     if is_correct:
-        logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})
+        logger.info('Prediction correcte', extra={'custom_dimensions': {'prediction': sentiment}})
     else:
-        logger.info('Prediction incorrecte', extra={'custom_dimensions': {'prediction': prediction}})
+        logger.info('Prediction incorrecte', extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

@@ -21,14 +21,14 @@ if st.button("Analyser"):
         if st.button("Prédiction correcte"):
             requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
             if feedback_response.status_code == 200:
-                st.success("Merci pour votre feedback !")
+                st.write("Merci pour votre feedback !")
             else:
-                st.error("Erreur lors de l'envoi du feedback.")
+                st.write("Erreur lors de l'envoi du feedback.")
     with col2:
         if st.button("Prédiction incorrecte"):
             requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})
             if feedback_response.status_code == 200:
-                st.success("Merci pour votre feedback !")
+                st.write("Merci pour votre feedback !")
             else:
-                st.error("Erreur lors de l'envoi du feedback.")
+                st.write("Erreur lors de l'envoi du feedback.")
 

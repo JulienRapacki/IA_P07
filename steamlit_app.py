@@ -18,6 +18,8 @@ if st.button("Analyser"):
 
 
 if st.button("Prédiction correcte"):
+    prediction = response.json()['sentiment']
+    probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
     if feedback_response.status_code == 200:
         st.write("Merci pour votre feedback !")
@@ -25,6 +27,8 @@ if st.button("Prédiction correcte"):
         st.write("Erreur lors de l'envoi du feedback.")
 
 if st.button("Prédiction incorrecte"):
+    prediction = response.json()['sentiment']
+    probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})
     if feedback_response.status_code == 200:
         st.write("Merci pour votre feedback !")

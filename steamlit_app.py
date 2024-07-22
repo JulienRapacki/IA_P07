@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-
+from opencensus.ext.azure.trace_exporter import AzureLogHandler
 
 # URL de votre API Azure
 API_URL = "https://p07-insights.azurewebsites.net"
@@ -18,7 +18,8 @@ if st.button("Analyser"):
 
 
 if st.button("Prédiction correcte"):
-    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+    with tracer.span(name='API predict_sentiment'):
+        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
@@ -28,7 +29,8 @@ if st.button("Prédiction correcte"):
         st.write("Erreur lors de l'envoi du feedback.")
 
 if st.button("Prédiction incorrecte"):
-    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+    with tracer.span(name='API predict_sentiment'):
+        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})

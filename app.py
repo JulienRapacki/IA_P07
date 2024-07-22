@@ -9,6 +9,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+from opencensus.trace.tracer import Tracer
 import logging
 
 
@@ -68,7 +69,7 @@ clf_model = load_model('./model_lstm_glove.h5')
 
 
 def predict_sentiment(text):
-        
+    with tracer.span(name='predict_sentiment'):     
     
         # First let's preprocess the text in the same way than for the training
         text = preprocess(text)
@@ -89,7 +90,18 @@ def predict_sentiment(text):
 # partie dédiée à l'API
 app = Flask(__name__)
 
- 
+
+
+# Configuration du tracer
+tracer = Tracer() 
+
+# Configurer l'exporter pour envoyer les traces à Azure Log Analytics
+azure_handler = AzureLogHandler(
+    connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'
+)
+logging.getLogger().addHandler(azure_handler)
+
+
 
 # Configuration du logger
 logger = logging.getLogger(__name__)

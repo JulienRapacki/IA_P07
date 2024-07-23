@@ -12,7 +12,8 @@ st.title("Analyse de sentiment")
 user_input = st.text_area("Entrez votre phrase ici :")
 
 if st.button("Analyser"):
-    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+    with tracer.span(name='API predict_sentiment'):
+        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")

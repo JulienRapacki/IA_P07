@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from opencensus.ext.azure.trace_exporter import AzureLogHandler
+from opencensus.ext.azure.trace_exporter import AzureExporter
 
 # URL de votre API Azure
 API_URL = "https://p07-insights.azurewebsites.net"

@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.trace.tracer import Tracer
 import logging
 

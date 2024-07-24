@@ -34,6 +34,7 @@ if st.button("Prédiction correcte"):
 
 if st.button("Prédiction incorrecte"):
     with tracer.span(name='API predict_sentiment'):
+        logger.warning("test warning")
         response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']

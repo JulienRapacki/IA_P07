@@ -6,7 +6,7 @@ from opencensus.trace.tracer import Tracer
 # URL de votre API Azure
 API_URL = "https://p07-insights.azurewebsites.net"
 
-tracer = Tracer()
+tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
 
 
 st.title("Analyse de sentiment")

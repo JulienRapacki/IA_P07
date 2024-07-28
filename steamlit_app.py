@@ -7,13 +7,13 @@ import logging
 
 
 # URL de votre API Azure
-API_URL = "https://p07-insights.azurewebsites.net"
+API_URL = "https://p07.azurewebsites.net"
 
-tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
+tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
 
 logger = logging.getLogger()
 logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'
+    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
 ))
 
 

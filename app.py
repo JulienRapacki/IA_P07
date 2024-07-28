@@ -76,7 +76,7 @@ def predict_sentiment(text):
 
         return sentiment, probability_score
 
-
+#chargement du modèle
 clf_model = load_model('./model_lstm_glove.h5')
 
 

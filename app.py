@@ -1,6 +1,7 @@
 import pickle
 import numpy
 import re
+
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
@@ -8,6 +9,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
+#Analyses dans Azure
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.trace.tracer import Tracer
 import logging
@@ -56,7 +58,7 @@ def preprocess(text) :
 
 MAX_SEQUENCE_LENGTH =30
 
-# Chargement du tokenizer préalablement entraîné
+#Chargement du tokenizer préalablement entraîné
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 

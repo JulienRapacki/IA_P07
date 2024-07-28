@@ -58,11 +58,11 @@ def preprocess(text) :
 
 MAX_SEQUENCE_LENGTH =30
 
-#Chargement du tokenizer préalablement entraîné
+# Chargement du tokenizer préalablement entraîné
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 
-#chargement du modèle
+# Chargement du modèle
 clf_model = load_model('./model_lstm_glove.h5')
 
 
@@ -107,6 +107,11 @@ logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
 
 
+# Page d'accueil
+@app.route("/")
+def home():
+    return "Hello, welcome to the sentiment classification API for project 07 !"
+
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
 
@@ -129,8 +134,5 @@ def feedback():
     
     return jsonify({'status': 'success'})
 
-# This is the reroute to the welcome page
-@app.route("/")
-def home():
-    return "Hello, welcome to the sentiment classification API for project 07 !"
+
 

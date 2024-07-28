@@ -100,7 +100,6 @@ azure_handler = AzureLogHandler(
 logging.getLogger().addHandler(azure_handler)
 
 
-
 # Configuration du logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
@@ -116,7 +115,6 @@ def predict():
     
     # Process the text in order to get the sentiment
     results = predict_sentiment(text)
-    
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
     
 @app.route('/feedback', methods=['POST'])

@@ -1,7 +1,7 @@
 Flask
 nltk
 numpy
-tensorflow-cpu
+tensorflow-cpu==2.15.1
 applicationinsights
 opencensus
 opencensus-ext-azure

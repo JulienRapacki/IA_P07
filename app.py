@@ -12,9 +12,6 @@ from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.trace.tracer import Tracer
 import logging
 
-
-
-
 # Deep learning
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -30,11 +27,10 @@ nltk.download('wordnet')
 stop = set(stopwords.words('english'))
 
 
-# regex permettant d'ignorer les caractères spéciaux ainsi que les nombres et les mots contenant des underscores
-
 def preprocess(text) :
 
     def tokenize(text):
+        # regex permettant d'ignorer les caractères spéciaux ainsi que les nombres et les mots contenant des underscores
         tokenizer = nltk.RegexpTokenizer(r'\b(?![\w_]*_)[^\d\W]+\b')
         # Tokenisation de la description et suppression des majuscules
         tokens = tokenizer.tokenize(text.lower())
@@ -97,7 +93,7 @@ tracer = Tracer()
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
 azure_handler = AzureLogHandler(
-    connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'
+    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
 )
 logging.getLogger().addHandler(azure_handler)
 
@@ -107,7 +103,7 @@ logging.getLogger().addHandler(azure_handler)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
+    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
 
 
 @app.route("/predict_sentiment", methods=["POST"])
@@ -133,7 +129,7 @@ def feedback():
     
     return jsonify({'status': 'success'})
 
-# This is the reoute to the welcome page
+# This is the reroute to the welcome page
 @app.route("/")
 def home():
     return "Hello, welcome to the sentiment classification API for project 07 !"

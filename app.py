@@ -132,7 +132,7 @@ def feedback():
     if is_correct:
         logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
     else:
-        logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+        logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

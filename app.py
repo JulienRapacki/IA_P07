@@ -100,9 +100,9 @@ app = Flask(__name__)
 # tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
-# logger = logging.getLogger(__name__)
-# azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
-# logger.addHandler(azure_handler)
+logger = logging.getLogger(__name__)
+azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
+logger.addHandler(azure_handler)
 
 
 # Page d'accueil
@@ -122,16 +122,16 @@ def predict():
 
 
 # @app.route('/feedback', methods=['POST'])
-# def feedback():
-#     prediction = request.args['sentiment']
-#     is_correct = request.args['is_correct'] == 'True'
+def feedback():
+    prediction = request.args['sentiment']
+    is_correct = request.args['is_correct'] == 'True'
     
-#     if is_correct:
-#         logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
-#     else:
-#         logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+    if is_correct:
+        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
+    else:
+        logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
-#     return jsonify({'status': 'success'})
+    return jsonify({'status': 'success'})
 
 
 

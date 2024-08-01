@@ -11,6 +11,7 @@ from nltk.stem import SnowballStemmer
 
 #Analyses dans Azure
 from opencensus.ext.azure.log_exporter import AzureLogHandler
+from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace.tracer import Tracer
 import logging
 
@@ -101,10 +102,10 @@ logging.getLogger().addHandler(azure_handler)
 
 
 # Configuration du logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
+logger = logging.getLogger()
 logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
+    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
+))
 
 
 # Page d'accueil
@@ -126,11 +127,13 @@ def predict():
 def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] == 'True'
+
+    with tracer.span(name='API predict_sentiment'):
     
-    if is_correct:
-        logger.warning('Prediction correcte', extra={'custom_dimensions': {'prediction': prediction}})
-    else:
-        logger.warning('Prediction incorrecte', extra={'custom_dimensions': {'prediction': prediction}})
+        if is_correct:
+            logger.warning('Prediction correcte ok', extra={'custom_dimensions': {'prediction': prediction}})
+        else:
+            logger.warning('Prediction incorrecte warning', extra={'custom_dimensions': {'prediction': prediction}})
     
     return jsonify({'status': 'success'})
 

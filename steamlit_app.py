@@ -9,29 +9,21 @@ import logging
 # URL de votre API Azure
 API_URL = "https://p07.azurewebsites.net"
 
-tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
-
-logger = logging.getLogger()
-logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
-))
-
-
 st.title("Analyse de sentiment")
 
 user_input = st.text_area("Entrez votre phrase ici :")
 
 if st.button("Analyser"):
-    with tracer.span(name='API predict_sentiment'):
-        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+    
+    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")
 
 
 if st.button("Prédiction correcte"):
-    with tracer.span(name='API predict_sentiment'):
-        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+    
+    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "True"})
@@ -41,9 +33,8 @@ if st.button("Prédiction correcte"):
         st.write("Erreur lors de l'envoi du feedback.")
 
 if st.button("Prédiction incorrecte"):
-    with tracer.span(name='API predict_sentiment'):
-        logger.warning("wrong prediction")
-        response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
+            
+    response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
     prediction = response.json()['sentiment']
     probability = response.json()['probability']
     requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": "False"})

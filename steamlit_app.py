@@ -36,7 +36,7 @@ if st.button("Prédiction correcte"):
 if st.button("Prédiction incorrecte"):
     logger = logging.getLogger(__name__)
     logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'))
+    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'))
     tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
     with tracer.span(name='API predict_sentiment'):
         logger.warning("wrong prediction")             

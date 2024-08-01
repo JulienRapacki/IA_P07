@@ -124,17 +124,17 @@ def predict():
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
 
-@app.route('/feedback', methods=['POST'])
-def feedback():
-    prediction = request.args['sentiment']
-    is_correct = request.args['is_correct'] == 'True'
+# @app.route('/feedback', methods=['POST'])
+# def feedback():
+#     prediction = request.args['sentiment']
+#     is_correct = request.args['is_correct'] == 'True'
     
-    if is_correct:
-        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
-    else:
-        logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+#     if is_correct:
+#         logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
+#     else:
+#         logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
-    return jsonify({'status': 'success'})
+#     return jsonify({'status': 'success'})
 
 
 

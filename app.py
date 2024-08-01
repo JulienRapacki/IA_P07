@@ -122,8 +122,8 @@ def feedback():
         
         logger.warning('Prediction correcte ok', extra={'custom_dimensions': {'prediction': prediction}})
     else:
-        with tracer.span(name='API predict_sentiment'):
-            logger.warning('Prediction incorrecte warning', extra={'custom_dimensions': {'prediction': prediction}})
+        # with tracer.span(name='API predict_sentiment'):
+        logger.warning('Prediction incorrecte warning', extra={'custom_dimensions': {'prediction': prediction}})
     
     return jsonify({'status': 'success'})
 

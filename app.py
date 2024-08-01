@@ -93,6 +93,9 @@ app = Flask(__name__)
 tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
+
 azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
 logging.getLogger().addHandler(azure_handler)
 
@@ -117,11 +120,9 @@ def feedback():
     is_correct = request.args['is_correct'] == 'True'
         
     if is_correct:
-        with tracer.span(name='API predict_sentiment'):
-            logger.warning('Prediction correcte ok')
+        logger.warning('Prediction correcte ok')
     else:
-        with tracer.span(name='API predict_sentiment'):
-            logger.warning('Prediction incorrecte warning')
+        logger.warning('Prediction incorrecte warning')
     
     return jsonify({'status': 'success'})
 

@@ -119,8 +119,8 @@ def feedback():
     is_correct = request.args['is_correct'] == 'True'
         
     if is_correct:
-        with tracer.span(name='API predict_sentiment'):
-            logger.warning('Prediction correcte ok', extra={'custom_dimensions': {'prediction': prediction}})
+        
+        logger.warning('Prediction correcte ok', extra={'custom_dimensions': {'prediction': prediction}})
     else:
         with tracer.span(name='API predict_sentiment'):
             logger.warning('Prediction incorrecte warning', extra={'custom_dimensions': {'prediction': prediction}})

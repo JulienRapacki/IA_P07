@@ -93,19 +93,20 @@ def predict_sentiment(text):
 app = Flask(__name__)
 
 # Configuration du middleware OpenCensus pour Flask
-middleware = FlaskMiddleware(
-    app,
-    exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'),
-    sampler=ProbabilitySampler(rate=1.0)
-)
+# middleware = FlaskMiddleware(
+#     app,
+#     exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'),
+#     sampler=ProbabilitySampler(rate=1.0)
+# )
 
 # Configuration du tracer
-tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
+# tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
 logger = logging.getLogger(__name__)
 azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
 logger.addHandler(azure_handler)
+
 
 # Page d'accueil
 @app.route("/")
@@ -121,12 +122,12 @@ def predict():
     # Process the text in order to get the sentiment
     results = predict_sentiment(text)
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
-    
+
+
 @app.route('/feedback', methods=['POST'])
 def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] == 'True'
-
     
     if is_correct:
         logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})

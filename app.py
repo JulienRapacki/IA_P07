@@ -94,8 +94,6 @@ tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43b
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.WARNING)
-
 azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
 logger.addHandler(azure_handler)
 
@@ -123,7 +121,7 @@ def feedback():
         if is_correct:
             logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
         else:
-            logger.warning('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+            logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

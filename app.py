@@ -122,12 +122,12 @@ def predict():
 def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] == 'True'
-
-    with tracer.span(name='API predict_sentiment'):
-    
-        if is_correct:
+        
+    if is_correct:
+        with tracer.span(name='API predict_sentiment'):
             logger.warning('Prediction correcte ok', extra={'custom_dimensions': {'prediction': prediction}})
-        else:
+    else:
+        with tracer.span(name='API predict_sentiment'):
             logger.warning('Prediction incorrecte warning', extra={'custom_dimensions': {'prediction': prediction}})
     
     return jsonify({'status': 'success'})

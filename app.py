@@ -12,7 +12,7 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.trace.tracer import Tracer
+#from opencensus.trace.tracer import Tracer
 import logging
 
 # Deep learning
@@ -100,7 +100,7 @@ app = Flask(__name__)
 # tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
 logger.addHandler(azure_handler)
 

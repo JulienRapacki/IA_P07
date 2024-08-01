@@ -97,7 +97,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
 azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
-logging.getLogger().addHandler(azure_handler)
+logger.addHandler(azure_handler)
 
 # Page d'accueil
 @app.route("/")

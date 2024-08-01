@@ -68,38 +68,29 @@ clf_model = load_model('./model_lstm_glove.h5')
 
 
 def predict_sentiment(text):
-    with tracer.span(name='predict_sentiment'):     
-    
-        # First let's preprocess the text in the same way than for the training
-        text = preprocess(text)
+     
+    # First let's preprocess the text in the same way than for the training
+    text = preprocess(text)
 
-        # Let's get the index sequences from the tokenizer
-        index_sequence = pad_sequences(tokenizer.texts_to_sequences([text]),
-                                    maxlen = MAX_SEQUENCE_LENGTH,padding='post')
+    # Let's get the index sequences from the tokenizer
+    index_sequence = pad_sequences(tokenizer.texts_to_sequences([text]),
+                                maxlen = MAX_SEQUENCE_LENGTH,padding='post')
 
-        probability_score = clf_model.predict(index_sequence)[0][0]
+    probability_score = clf_model.predict(index_sequence)[0][0]
 
-        if probability_score < 0.5:
-            sentiment = "negatif"
-        else:
-            sentiment = "positif"
+    if probability_score < 0.5:
+        sentiment = "negatif"
+    else:
+        sentiment = "positif"
 
-        return sentiment, probability_score
+    return sentiment, probability_score
+
 
 # partie dédiée à l'API
 app = Flask(__name__)
 
-
-
 # Configuration du tracer
-tracer = Tracer() 
-
-# Configurer l'exporter pour envoyer les traces à Azure Log Analytics
-azure_handler = AzureLogHandler(
-    connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
-)
-logging.getLogger().addHandler(azure_handler)
-
+tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
 # Configuration du logger
 logger = logging.getLogger()

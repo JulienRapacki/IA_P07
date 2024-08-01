@@ -12,6 +12,9 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.trace import config_integration
+from opencensus.trace.samplers import ProbabilitySampler
+from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace.tracer import Tracer
 import logging
 
@@ -89,6 +92,13 @@ def predict_sentiment(text):
 # partie dédiée à l'API
 app = Flask(__name__)
 
+# Configuration du middleware OpenCensus pour Flask
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'),
+    sampler=ProbabilitySampler(rate=1.0)
+)
+
 # Configuration du tracer
 tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
 
@@ -117,11 +127,11 @@ def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] == 'True'
 
-    with tracer.span(name='API predict_sentiment'):
-        if is_correct:
-            logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
-        else:
-            logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+    
+    if is_correct:
+        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
+    else:
+        logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

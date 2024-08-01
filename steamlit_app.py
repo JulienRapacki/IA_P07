@@ -32,7 +32,9 @@ if st.button("Prédiction correcte"):
     else:
         st.write("Erreur lors de l'envoi du feedback.")
 
+
 if st.button("Prédiction incorrecte"):
+    tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
     with tracer.span(name='API predict_sentiment'):
         logger.warning("wrong prediction")             
         response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})

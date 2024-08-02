@@ -12,7 +12,7 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry import trace
-# import logging
+import logging
 
 
 # Deep learning
@@ -124,10 +124,10 @@ def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] 
     
-    # if is_correct:
-    #     logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
-    # else:
-    #     logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+    if is_correct:
+        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
+    else:
+        logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

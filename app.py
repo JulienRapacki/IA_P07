@@ -124,10 +124,10 @@ def predict():
 # @app.route('/feedback', methods=['POST'])
 def feedback():
     prediction = request.args['sentiment']
-    is_correct = request.args['is_correct'] == 'True'
+    is_correct = request.args['is_correct'] 
     
     if is_correct:
-        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': sentiment}})
+        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
     else:
         logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     

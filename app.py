@@ -92,6 +92,8 @@ configure_azure_monitor(
     connection_string=f'InstrumentationKey={instrumentation_key}',
 )
 
+logger = logging.getLogger(__name__)
+
 # partie dédiée à l'API
 app = Flask(__name__)
 
@@ -101,7 +103,8 @@ app = Flask(__name__)
 
 # tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=)) 
 
-# Configurer l'exporter pour envoyer les traces à Azure Log Analytics
+
+
 
 # Page d'accueil
 @app.route("/")

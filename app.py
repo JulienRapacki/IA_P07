@@ -122,7 +122,7 @@ def predict():
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
 
-# @app.route('/feedback', methods=['POST'])
+@app.route('/feedback', methods=['POST'])
 def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] 

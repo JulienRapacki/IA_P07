@@ -97,12 +97,12 @@ app = Flask(__name__)
 # )
 
 # Configuration du tracer
-# tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')) 
+# tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=)) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
-logger = logging.getLogger()
-azure_handler = AzureLogHandler(connection_string='InstrumentationKey=43bf7273-a937-47a7-a8e6-ba3cd01a3a30')
-logger.addHandler(azure_handler)
+instrumentation_key = '43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string=f'InstrumentationKey={instrumentation_key}'))
 
 
 # Page d'accueil

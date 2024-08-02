@@ -10,10 +10,9 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
 
 #Analyses dans Azure
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-from opencensus.ext.azure.trace_exporter import AzureExporter
-#from opencensus.trace.tracer import Tracer
-import logging
+from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry import trace
+
 
 # Deep learning
 import tensorflow as tf
@@ -89,21 +88,17 @@ def predict_sentiment(text):
 # partie dédiée à l'API
 app = Flask(__name__)
 
-# Configuration du middleware OpenCensus pour Flask
-# middleware = FlaskMiddleware(
-#     app,
-#     exporter=AzureExporter(connection_string='InstrumentationKey=7041f9ba-42f6-4ca8-9b3f-bd436fca5122'),
-#     sampler=ProbabilitySampler(rate=1.0)
-# )
+# Configuration analyses Azure
+instrumentation_key = '43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
+configure_azure_monitor(
+    connection_string=f'InstrumentationKey={instrumentation_key}',
+)
 
 # Configuration du tracer
+
 # tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=)) 
 
 # Configurer l'exporter pour envoyer les traces à Azure Log Analytics
-instrumentation_key = '43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
-logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(connection_string=f'InstrumentationKey={instrumentation_key}'))
-
 
 # Page d'accueil
 @app.route("/")
@@ -126,10 +121,10 @@ def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] 
     
-    if is_correct:
-        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
-    else:
-        logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+    # if is_correct:
+    #     logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
+    # else:
+    #     logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
     
     return jsonify({'status': 'success'})
 

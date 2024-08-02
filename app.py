@@ -87,7 +87,7 @@ def predict_sentiment(text):
 
 
 # Configuration analyses Azure
-instrumentation_key = '15aa8abf-7643-49c2-8bea-5b88cf5079ca'
+instrumentation_key = 'ec60a799-186d-4345-86af-c5babe81ee62'
 configure_azure_monitor(
     connection_string=f'InstrumentationKey={instrumentation_key}',
 )

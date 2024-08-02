@@ -2,8 +2,6 @@ Flask
 nltk
 numpy
 tensorflow-cpu==2.15.1
-opentelemetry-api
-opentelemetry-sdk
-opentelemetry-exporter-azure-monitor
-opentelemetry-instrumentation-flask
-opentelemetry-instrumentation-requests
+opentelemetry
+
+

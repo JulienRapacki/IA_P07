@@ -85,14 +85,16 @@ def predict_sentiment(text):
     return sentiment, probability_score
 
 
-# partie dédiée à l'API
-app = Flask(__name__)
-
 # Configuration analyses Azure
 instrumentation_key = '43bf7273-a937-47a7-a8e6-ba3cd01a3a30'
 configure_azure_monitor(
     connection_string=f'InstrumentationKey={instrumentation_key}',
 )
+
+# partie dédiée à l'API
+app = Flask(__name__)
+
+
 
 # Configuration du tracer
 

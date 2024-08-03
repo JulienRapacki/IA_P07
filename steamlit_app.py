@@ -20,7 +20,8 @@ if st.button("Analyser"):
 
     if st.button("Prédiction correcte"):
             
-        requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": True})
+        # requests.post(f"{API_URL}/feedback", params={"Prédiction correcte": prediction, "is_correct": True})
+        requests.post(f"{API_URL}/feedback", json={'prediction': prediction, 'is_correct': True})
         if response.status_code == 200:
             st.write("Merci pour votre feedback !")
         else:
@@ -29,7 +30,7 @@ if st.button("Analyser"):
     
     if st.button("Prédiction incorrecte"):
                   
-        requests.post(f"{API_URL}/feedback", params={"prediction": prediction, "is_correct": False})
+        requests.post(f"{API_URL}/feedback", params={"Prédiction incorrecte": prediction, "is_correct": False})
         if response.status_code == 200:
             st.write("Merci pour votre feedback !")
         else:

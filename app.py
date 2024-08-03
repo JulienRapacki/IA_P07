@@ -12,6 +12,7 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry import trace
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
 import logging
 
 
@@ -91,6 +92,8 @@ instrumentation_key = 'ec60a799-186d-4345-86af-c5babe81ee62'
 configure_azure_monitor(
     connection_string=f'InstrumentationKey={instrumentation_key}',
 )
+
+RequestsInstrumentor().instrument()
 
 logger = logging.getLogger(__name__)
 

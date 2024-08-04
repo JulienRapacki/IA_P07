@@ -92,22 +92,16 @@ def predict_sentiment(text):
 
 # Configuration analyses Azure
 instrumentation_key = 'ec60a799-186d-4345-86af-c5babe81ee62'
-configure_azure_monitor(
-    connection_string=f'InstrumentationKey={instrumentation_key}',
-)
-
-RequestsInstrumentor().instrument()
 
 # Configuration du tracer
 
-# Vérifie si un TracerProvider est déjà défini
 if trace.get_tracer_provider().__class__.__name__ == "NoOpTracerProvider":
     # Si aucun TracerProvider n'est défini, configurez-en un nouveau
     trace.set_tracer_provider(TracerProvider())
 
     # Configurez l'exportateur Azure Monitor
     exporter = AzureMonitorTraceExporter(
-        connection_string="InstrumentationKey=your-instrumentation-key-here"
+        connection_string=f'InstrumentationKey={instrumentation_key}'
     )
     span_processor = BatchSpanProcessor(exporter)
     trace.get_tracer_provider().add_span_processor(span_processor)

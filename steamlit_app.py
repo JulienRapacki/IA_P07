@@ -15,10 +15,8 @@ logger = logging.getLogger(__name__)
 #     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 # span_processor = BatchSpanProcessor(exporter)
 
-def create_ot_tracer() -> Tracer:
-    # Get a tracer for the current module.
-    tracer = trace.get_tracer(__name__)
-    return tracer
+tracer = trace.get_tracer(__name__)
+
 
 
 st.title("Analyse de sentiment - Projet 7")

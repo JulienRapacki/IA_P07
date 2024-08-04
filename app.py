@@ -16,7 +16,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
+import logging
 
 
 # Deep learning
@@ -92,6 +92,8 @@ def predict_sentiment(text):
 
 # Configuration analyses Azure
 instrumentation_key = 'ec60a799-186d-4345-86af-c5babe81ee62'
+
+logger = logging.getLogger(__name__)
 
 # Configuration du tracer
 

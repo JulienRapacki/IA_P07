@@ -12,8 +12,11 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry import trace
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
-import logging
+from opentelemetry.sdk.trace import TracerProvider
+from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
 
 
 # Deep learning
@@ -97,16 +100,20 @@ RequestsInstrumentor().instrument()
 
 logger = logging.getLogger(__name__)
 
-# partie dédiée à l'API
-app = Flask(__name__)
 
 
 
 # Configuration du tracer
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+span_processor = BatchSpanProcessor(exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 
-# tracer = Tracer(exporter=AzureExporter(connection_string='InstrumentationKey=)) 
 
+# partie dédiée à l'API
+app = Flask(__name__)
 
+FlaskInstrumentor().instrument_app(app)
 
 
 # Page d'accueil
@@ -129,11 +136,7 @@ def predict():
 def feedback():
     prediction = request.args['sentiment']
     is_correct = request.args['is_correct'] 
-    
-    if is_correct:
-        logger.warning('Prediction correcte ok',extra={'custom_dimensions': {'prediction': prediction , 'is_correct' : is_correct }})
-    else:
-        logger.error('Prediction incorrecte warning',extra={'custom_dimensions': {'prediction': sentiment}})
+
     
     return jsonify({'status': 'success'})
 

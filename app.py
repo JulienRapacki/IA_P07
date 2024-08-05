@@ -115,7 +115,9 @@ def home():
 def predict():
 
     # Get the text included in the request
-    text = request.args['text']
+    with tracer.start_as_current_span(name="predict"):
+        text = request.args['text']
+        logger.info("log ok")
     
     # Process the text in order to get the sentiment
     results = predict_sentiment(text)
@@ -124,10 +126,9 @@ def predict():
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    with tracer.start_as_current_span(name="predict"):
-        prediction = request.args['sentiment']
-        logger.info("log ok")
-        is_correct = request.args['is_correct'] 
+   
+    prediction = request.args['sentiment']
+    is_correct = request.args['is_correct'] 
 
     
     return jsonify({'status': 'success'})

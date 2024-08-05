@@ -26,34 +26,56 @@ logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------------------------------------
 
+if 'sentiment' not in st.session_state:
+    st.session_state.sentiment = None
+if 'feedback_given' not in st.session_state:
+    st.session_state.feedback_given = False
 
+st.title("Analyse de sentiment")
 
-st.title("Analyse de sentiment - Projet 7")
+text = st.text_input("Entrez une phrase :")
 
-user_input = st.text_area("Entrez votre phrase ici :")
-
-
-if st.button("Analyser"):
+# Fonction pour analyser le sentiment
+def analyze_sentiment():
     with tracer.start_as_current_span("analyze_sentiment") as span:
-        logger.info('analyse ok')
         response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
-        prediction = response.json()['sentiment']
-        probability = response.json()['probability']
-        st.write(f"Sentiment prédit : {prediction} pour une probabilité de {probability}")
-        span.set_attribute("text", user_input)
-        span.set_attribute("predicted_sentiment", prediction)
+        st.session_state.sentiment = response.json()['sentiment']
+        span.set_attribute("text", text)
+        span.set_attribute("predicted_sentiment", st.session_state.sentiment)
+    st.session_state.feedback_given = False
 
-        if st.button("Prédiction conforme"):
-            with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-                feedback_span.set_attribute("feedback", "conforme")
-                feedback_span.set_attribute("text", user_input)
-                feedback_span.set_attribute("sentiment", prediction)
-            st.success("Merci pour votre retour !")
+# Bouton pour analyser
+if st.button("Analyser"):
+    analyze_sentiment()
+
+# Affichage du résultat et des boutons de feedback
+if st.session_state.sentiment is not None:
+    st.write(f"Sentiment prédit : {st.session_state.sentiment}")
+    
+    if not st.session_state.feedback_given:
+        col1, col2 = st.columns(2)
         
-        if st.button("Prédiction non conforme"):
-            with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-                feedback_span.set_attribute("feedback", "non_conforme")
-                logger.warning("pred not ok")
-                feedback_span.set_attribute("text", user_input)
-                feedback_span.set_attribute("sentiment", prediction)
-            st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")
+        with col1:
+            if st.button("Prédiction conforme"):
+                with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+                    feedback_span.set_attribute("feedback", "conforme")
+                    feedback_span.set_attribute("text", text)
+                    feedback_span.set_attribute("sentiment", st.session_state.sentiment)
+                st.success("Merci pour votre retour !")
+                st.session_state.feedback_given = True
+
+        with col2:
+            if st.button("Prédiction non conforme"):
+                with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+                    feedback_span.set_attribute("feedback", "non_conforme")
+                    feedback_span.set_attribute("text", text)
+                    feedback_span.set_attribute("sentiment", st.session_state.sentiment)
+                st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")
+                st.session_state.feedback_given = True
+
+# Bouton pour réinitialiser
+if st.session_state.feedback_given:
+    if st.button("Nouvelle analyse"):
+        st.session_state.sentiment = None
+        st.session_state.feedback_given = False
+        st.experimental_rerun()

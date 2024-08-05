@@ -111,8 +111,9 @@ logger = logging.getLogger(__name__)
 
 # partie dédiée à l'API
 app = Flask(__name__)
+FlaskInstrumentor().instrument_app(app)
 
-with tracer.start_as_current_span("test"):
+with tracer.start_as_current_span("app_start"):
     print("Hello world!")
  
 
@@ -125,9 +126,9 @@ def home():
 def predict():
 
     # Get the text included in the request
-    with tracer.start_as_current_span(name="predict"):
+    with tracer.start_as_current_span(name="prediction_request_received"):
         text = request.args['text']
-        logger.info("log ok")
+        logger.info("prediction_request_received ok")
     
     # Process the text in order to get the sentiment
     results = predict_sentiment(text)
@@ -136,11 +137,11 @@ def predict():
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
-   
-    prediction = request.args['sentiment']
-    is_correct = request.args['is_correct'] 
-
-    
+    with tracer.start_as_current_span(name="feedback_request_received") as span:
+        prediction = request.args['sentiment']
+        is_correct = request.args['is_correct'] 
+        span.set_attibute('prediction ok' : is_correct)
+        
     return jsonify({'status': 'success'})
 
 

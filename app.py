@@ -97,9 +97,9 @@ configure_azure_monitor(
 
 # Configuration du tracer
 trace.set_tracer_provider(TracerProvider())
-trace.get_tracer_provider().add_span_processor(
-    BatchSpanProcessor(exporter)
-)
+trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
+
+tracer = trace.get_tracer(__name__)
 
 logger = logging.getLogger(__name__)
 

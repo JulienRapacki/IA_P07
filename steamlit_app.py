@@ -15,7 +15,19 @@ exporter = AzureMonitorTraceExporter(
     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 span_processor = BatchSpanProcessor(exporter)
 
+#-----------------------------------------------------------------------------------------
 
+
+# Configuration du tracer
+trace.set_tracer_provider(TracerProvider())
+trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
+
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+
+#----------------------------------------------------------------------------------------
 
 
 
@@ -35,17 +47,17 @@ if st.button("Analyser"):
         span.set_attribute("text", user_input)
         span.set_attribute("predicted_sentiment", prediction)
 
-if st.button("Prédiction conforme"):
-    with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-        feedback_span.set_attribute("feedback", "conforme")
-        feedback_span.set_attribute("text", user_input)
-        feedback_span.set_attribute("sentiment", prediction)
+    if st.button("Prédiction conforme"):
+        with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+            feedback_span.set_attribute("feedback", "conforme")
+            feedback_span.set_attribute("text", user_input)
+            feedback_span.set_attribute("sentiment", prediction)
         st.success("Merci pour votre retour !")
-
-if st.button("Prédiction non conforme"):
-    with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-        feedback_span.set_attribute("feedback", "non_conforme")
-        logger.warning("pred not ok")
-        feedback_span.set_attribute("text", user_input)
-        feedback_span.set_attribute("sentiment", prediction)
+    
+    if st.button("Prédiction non conforme"):
+        with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+            feedback_span.set_attribute("feedback", "non_conforme")
+            logger.warning("pred not ok")
+            feedback_span.set_attribute("text", user_input)
+            feedback_span.set_attribute("sentiment", prediction)
         st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")

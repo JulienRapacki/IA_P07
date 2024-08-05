@@ -105,7 +105,7 @@ trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
 tracer = trace.get_tracer(__name__)
 
-logger = logging.getLogger(__name__)
+
 
 
 
@@ -126,12 +126,13 @@ def home():
 def predict():
 
     # Get the text included in the request
-    with tracer.start_as_current_span(name="prediction_request_received"):
+    with tracer.start_as_current_span(name="prediction_request_received") as span:
         text = request.args['text']
-        logger.info("prediction_request_received ok")
+        results = predict_sentiment(text)
+        span.set_attribute("predicted_sentiment", results)
     
     # Process the text in order to get the sentiment
-    results = predict_sentiment(text)
+    
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
 

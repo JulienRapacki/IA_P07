@@ -129,7 +129,7 @@ def predict():
     with tracer.start_as_current_span(name="prediction_request_received") as span:
         text = request.args['text']
         results = predict_sentiment(text)
-        span.set_attribute("predicted_sentiment", results)
+        span.set_attribute("predicted_sentiment", str(results))
     
     # Process the text in order to get the sentiment
     
@@ -141,7 +141,7 @@ def feedback():
     with tracer.start_as_current_span(name="feedback_request_received") as span:
         prediction = request.args['sentiment']
         is_correct = request.args['is_correct'] 
-        span.set_attibute('prediction ok' , is_correct)
+        span.set_attibute('prediction ok' , str(is_correct))
         
     return jsonify({'status': 'success'})
 

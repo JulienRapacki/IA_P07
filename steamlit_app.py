@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from opentelemetry.trace import Tracer
+from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry import environment_variables, metrics, trace
 import logging
 from opentelemetry.sdk.trace.export import BatchSpanProcessor

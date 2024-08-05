@@ -97,16 +97,7 @@ logger = logging.getLogger(__name__)
 
 # Configuration du tracer
 
-if trace.get_tracer_provider().__class__.__name__ == "NoOpTracerProvider":
-    # Si aucun TracerProvider n'est défini, configurez-en un nouveau
-    trace.set_tracer_provider(TracerProvider())
-
-    # Configurez l'exportateur Azure Monitor
-    exporter = AzureMonitorTraceExporter(
-        connection_string=f'InstrumentationKey={instrumentation_key}'
-    )
-    span_processor = BatchSpanProcessor(exporter)
-    trace.get_tracer_provider().add_span_processor(span_processor)
+tracer = trace.get_tracer(__name__)
 
 
 # partie dédiée à l'API
@@ -133,8 +124,10 @@ def predict():
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
-    prediction = request.args['sentiment']
-    is_correct = request.args['is_correct'] 
+    with tracer.start_as_current_span(name="predict"):
+        prediction = request.args['sentiment']
+        logger.info("log ok")
+        is_correct = request.args['is_correct'] 
 
     
     return jsonify({'status': 'success'})

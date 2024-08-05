@@ -91,7 +91,10 @@ def predict_sentiment(text):
 
 
 # Configuration analyses Azure
-instrumentation_key = 'ec60a799-186d-4345-86af-c5babe81ee62'
+instrumentation_key = 
+configure_azure_monitor(
+    connection_string=f'{ec60a799-186d-4345-86af-c5babe81ee62}',
+)
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +106,9 @@ tracer = trace.get_tracer(__name__)
 # partie dédiée à l'API
 app = Flask(__name__)
 
+with tracer.start_as_current_span("test"):
+    print("Hello world!")
+    
 FlaskInstrumentor().instrument_app(app)
 
 

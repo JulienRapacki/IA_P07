@@ -14,13 +14,9 @@ API_URL = "https://p07.azurewebsites.net"
 logger = logging.getLogger(__name__)
 exporter = AzureMonitorTraceExporter(
     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
-span_processor = BatchSpanProcessor(exporter)
-
-#-----------------------------------------------------------------------------------------
-
 
 # Configuration du tracer
-trace.set_tracer_provider(TracerProvider())
+#trace.set_tracer_provider(TracerProvider())
 trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
 tracer = trace.get_tracer(__name__)
@@ -36,7 +32,6 @@ st.title("Analyse de sentiment - Projet 7")
 
 user_input = st.text_area("Entrez votre phrase ici :")
 
-tracer = trace.get_tracer(__name__)
 
 if st.button("Analyser"):
     with tracer.start_as_current_span("analyze_sentiment") as span:

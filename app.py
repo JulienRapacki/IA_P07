@@ -140,7 +140,7 @@ def feedback():
     with tracer.start_as_current_span(name="feedback_request_received") as span:
         prediction = request.args['sentiment']
         is_correct = request.args['is_correct'] 
-        span.set_attibute('prediction ok' : is_correct)
+        span.set_attibute('prediction ok' , is_correct)
         
     return jsonify({'status': 'success'})
 

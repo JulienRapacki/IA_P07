@@ -48,17 +48,17 @@ if st.button("Analyser"):
         span.set_attribute("text", user_input)
         span.set_attribute("predicted_sentiment", prediction)
 
-    if st.button("Prédiction conforme"):
-        with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-            feedback_span.set_attribute("feedback", "conforme")
-            feedback_span.set_attribute("text", user_input)
-            feedback_span.set_attribute("sentiment", prediction)
-        st.success("Merci pour votre retour !")
-    
-    if st.button("Prédiction non conforme"):
-        with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-            feedback_span.set_attribute("feedback", "non_conforme")
-            logger.warning("pred not ok")
-            feedback_span.set_attribute("text", user_input)
-            feedback_span.set_attribute("sentiment", prediction)
-        st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")
+        if st.button("Prédiction conforme"):
+            with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+                feedback_span.set_attribute("feedback", "conforme")
+                feedback_span.set_attribute("text", user_input)
+                feedback_span.set_attribute("sentiment", prediction)
+            st.success("Merci pour votre retour !")
+        
+        if st.button("Prédiction non conforme"):
+            with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+                feedback_span.set_attribute("feedback", "non_conforme")
+                logger.warning("pred not ok")
+                feedback_span.set_attribute("text", user_input)
+                feedback_span.set_attribute("sentiment", prediction)
+            st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")

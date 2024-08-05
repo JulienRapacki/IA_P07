@@ -3,5 +3,5 @@ nltk
 numpy
 tensorflow-cpu==2.15.1
 azure-monitor-opentelemetry
-
+azure-monitor-opentelemetry-exporter
 

@@ -74,9 +74,3 @@ if st.session_state.sentiment is not None:
                 st.error("Merci pour votre retour. Nous allons améliorer notre modèle.")
                 st.session_state.feedback_given = True
 
-# Bouton pour réinitialiser
-if st.session_state.feedback_given:
-    if st.button("Nouvelle analyse"):
-        st.session_state.sentiment = None
-        st.session_state.feedback_given = False
-        st.experimental_rerun()

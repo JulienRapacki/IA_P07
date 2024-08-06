@@ -11,7 +11,7 @@ from azure.monitor.opentelemetry import configure_azure_monitor
 # URL de votre API Azure
 API_URL = "https://p07.azurewebsites.net"
 
-# logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 # exporter = AzureMonitorTraceExporter(
 #     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 # Configuration du tracer
@@ -60,6 +60,7 @@ if st.session_state.sentiment is not None:
         
         with col1:
             if st.button("Prédiction conforme"):
+                logger.warning('GOOD PREDICTION')
                 with tracer.start_as_current_span("prediction_feedback") as feedback_span:
                     feedback_span.set_attribute("feedback", "conforme")
                     feedback_span.set_attribute("text", user_input)
@@ -69,6 +70,7 @@ if st.session_state.sentiment is not None:
 
         with col2:
             if st.button("Prédiction non conforme"):
+                logger.warning('WRONG PREDICTION')
                 with tracer.start_as_current_span("prediction_feedback") as feedback_span:
                     feedback_span.set_attribute("feedback", "non_conforme")
                     feedback_span.set_attribute("text", user_input)

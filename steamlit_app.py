@@ -41,7 +41,7 @@ def analyze_sentiment():
     with tracer.start_as_current_span("analyze_sentiment") as span:
         response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
         st.session_state.sentiment = response.json()['sentiment']
-        st.session_state.probability = response.json()['probebility']
+        st.session_state.probability = response.json()['probability']
         span.set_attribute("text", user_input)
         span.set_attribute("predicted_sentiment", st.session_state.sentiment, st.session_state.probability)
     st.session_state.feedback_given = False

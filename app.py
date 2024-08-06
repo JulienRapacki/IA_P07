@@ -105,7 +105,7 @@ configure_azure_monitor(
 
 tracer = trace.get_tracer(__name__)
 
-
+logger = logging.getLogger(__name__)
 
 
 
@@ -125,7 +125,7 @@ def home():
 
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
-
+    logger.info("running prediction")
     # Get the text included in the request
     with tracer.start_as_current_span(name="prediction_request_received") as span:
         text = request.args['text']
@@ -142,6 +142,7 @@ def feedback():
     with tracer.start_as_current_span(name="feedback_request_received") as span:
         prediction = request.args['sentiment']
         is_correct = request.args['is_correct'] 
+        logger.info("correct_prediction")
         span.set_attibute('prediction ok' , str(is_correct))
         
     return jsonify({'status': 'success'})

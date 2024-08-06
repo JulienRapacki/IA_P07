@@ -43,7 +43,8 @@ def analyze_sentiment():
         st.session_state.sentiment = response.json()['sentiment']
         st.session_state.probability = response.json()['probability']
         span.set_attribute("text", user_input)
-        span.set_attribute("predicted_sentiment", st.session_state.sentiment, st.session_state.probability)
+        span.set_attribute("predicted_sentiment", st.session_state.sentiment)
+        span.set_attribute("probability", st.session_state.probability)
     st.session_state.feedback_given = False
 
 # Bouton pour analyser

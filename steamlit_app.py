@@ -6,23 +6,24 @@ from opentelemetry import environment_variables, metrics, trace
 import logging
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
-
+from azure.monitor.opentelemetry import configure_azure_monitor
 
 # URL de votre API Azure
 API_URL = "https://p07.azurewebsites.net"
 
-logger = logging.getLogger(__name__)
-exporter = AzureMonitorTraceExporter(
-    connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
-
+# logger = logging.getLogger(__name__)
+# exporter = AzureMonitorTraceExporter(
+#     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 # Configuration du tracer
 #trace.set_tracer_provider(TracerProvider())
-trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
+# provider = trace.get_tracer_provider()
+# provider.add_span_processor(BatchSpanProcessor(exporter))
 
+
+
+configure_azure_monitor(
+    connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 tracer = trace.get_tracer(__name__)
-
-logger = logging.getLogger(__name__)
-
 
 #----------------------------------------------------------------------------------------
 

@@ -104,7 +104,7 @@ logger = logging.getLogger(__name__)
 
 # partie dédiée à l'API
 app = Flask(__name__)
-FlaskInstrumentor().instrument_app(app)
+
 
 with tracer.start_as_current_span("app_start") as span:
     span.set_attribute("start", "ok")

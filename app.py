@@ -143,7 +143,8 @@ def feedback():
         prediction = request.args['sentiment']
         is_correct = request.args['is_correct'] 
         logger.info("correct_prediction")
-        span.set_attribute('prediction ok' , str(is_correct))
+        span.set_attribute('prediction', prediction)
+        span.set_attribute('is_correct', str(is_correct))
         
     return jsonify({'status': 'feedback_received'})
 

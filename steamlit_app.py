@@ -3,23 +3,15 @@ import requests
 from opentelemetry.trace import Tracer
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry import environment_variables, metrics, trace
-import logging
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+
 from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
 from azure.monitor.opentelemetry import configure_azure_monitor
 
 # URL de votre API Azure
 API_URL = "https://p07.azurewebsites.net"
 
-logger = logging.getLogger(__name__)
-# exporter = AzureMonitorTraceExporter(
-#     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
 # Configuration du tracer
-#trace.set_tracer_provider(TracerProvider())
-# provider = trace.get_tracer_provider()
-# provider.add_span_processor(BatchSpanProcessor(exporter))
-
-
 
 configure_azure_monitor(
     connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
@@ -60,7 +52,7 @@ if st.session_state.sentiment is not None:
         
         with col1:
             if st.button("Prédiction conforme"):
-                logger.warning('GOOD PREDICTION')
+                
                 with tracer.start_as_current_span("prediction_feedback") as feedback_span:
                     feedback_span.set_attribute("feedback", "conforme")
                     feedback_span.set_attribute("text", user_input)
@@ -70,8 +62,9 @@ if st.session_state.sentiment is not None:
 
         with col2:
             if st.button("Prédiction non conforme"):
-                logger.warning('WRONG PREDICTION')
+                
                 with tracer.start_as_current_span("prediction_feedback") as feedback_span:
+                    response = requests.post(f"{API_URL}/feeback", params={"feedback_error":st.session_state.sentiment})
                     feedback_span.set_attribute("feedback", "non_conforme")
                     feedback_span.set_attribute("text", user_input)
                     feedback_span.set_attribute("sentiment", st.session_state.sentiment)

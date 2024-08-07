@@ -64,7 +64,8 @@ if st.session_state.sentiment is not None:
             if st.button("Prédiction non conforme"):
                 
                 with tracer.start_as_current_span("prediction_feedback") as feedback_span:
-                    response = requests.post(f"{API_URL}/feeback", params={"feedback_error":st.session_state.sentiment})
+                    feedback_data = {"sentiment": prediction,"is_correct": is_correct == "no"}
+                    response = requests.post(f"{API_URL}/feeback", params={"feedback_error":feedback_data})
                     response.json()['is_correct']
                     feedback_span.set_attribute("feedback", "non_conforme")
                     feedback_span.set_attribute("text", user_input)

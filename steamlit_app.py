@@ -12,11 +12,11 @@ from azure.monitor.opentelemetry import configure_azure_monitor
 API_URL = "https://p07.azurewebsites.net"
 
 # Configuration du tracer
+instrumentation_key = "a76e31d9-acf0-4446-9fa2-874cbd600f90"
 
-configure_azure_monitor()
+configure_azure_monitor(
+    connection_string=f"InstrumentationKey={instrumentation_key}")
 tracer = trace.get_tracer(__name__)
-
-
 
 if 'sentiment' not in st.session_state:
     st.session_state.sentiment = None

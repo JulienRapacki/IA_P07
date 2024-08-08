@@ -1,11 +1,23 @@
 import pickle
 import numpy
 
+import re
+
+
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+
+from nltk.stem import SnowballStemmer
+
+#Analyses dans Azure
+from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry import trace
+import logging
+
+
 
 # Deep learning
 import tensorflow as tf
@@ -22,10 +34,13 @@ nltk.download('wordnet')
 stop = set(stopwords.words('english'))
 
 
+
 # Fonction pour le preprocessing
+
 def preprocess(text) :
 
     def tokenize(text):
+        # regex permettant d'ignorer les caractères spéciaux ainsi que les nombres et les mots contenant des underscores
         tokenizer = nltk.RegexpTokenizer(r'\b(?![\w_]*_)[^\d\W]+\b')
         # Tokenisation de la description et suppression des majuscules
         tokens = tokenizer.tokenize(text.lower())
@@ -55,26 +70,74 @@ MAX_SEQUENCE_LENGTH =30
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 
+
+# Chargement du modèle
+clf_model = load_model('./model_lstm_glove.h5')
+
+
+
 #Fonction de prédiction
+
 def predict_sentiment(text):
+     
+    # First let's preprocess the text in the same way than for the training
+    text = preprocess(text)
 
-        # First let's preprocess the text in the same way than for the training
-        text = preprocess(text)
+    # Let's get the index sequences from the tokenizer
+    index_sequence = pad_sequences(tokenizer.texts_to_sequences([text]),
+                                maxlen = MAX_SEQUENCE_LENGTH,padding='post')
 
-        # Let's get the index sequences from the tokenizer
-        index_sequence = pad_sequences(tokenizer.texts_to_sequences([text]),
-                                    maxlen = MAX_SEQUENCE_LENGTH,padding='post')
+    probability_score = clf_model.predict(index_sequence)[0][0]
 
-        probability_score = clf_model.predict(index_sequence)[0][0]
+    if probability_score < 0.5:
+        sentiment = "negatif"
+    else:
+        sentiment = "positif"
 
-        # Compte-tenu  du résultat de la courbe ROC-AUC, on préfèrera mettre un seuil à 0.6
-        # pour la proba afin de limiter les faux positifs
-        if probability_score < 0.5:
-            sentiment = "negative"
-        else:
-            sentiment = "positive"
+    return sentiment, probability_score
 
-        return sentiment, probability_score
+
+# Configuration analyses Azure
+instrumentation_key = "ec60a799-186d-4345-86af-c5babe81ee62"
+configure_azure_monitor(
+    connection_string=f"InstrumentationKey={instrumentation_key}")
+
+
+
+
+
+# Configuration du tracer
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+
+
+# partie dédiée à l'API
+app = Flask(__name__)
+
+
+with tracer.start_as_current_span("app_start") as span:
+    span.set_attribute("start", "ok")
+    print("Hello world!")
+ 
+
+# Page d'accueil
+@app.route("/")
+def home():
+    return "Hello, welcome to the sentiment classification API for project 07 !"
+
+@app.route("/predict_sentiment", methods=["POST"])
+def predict():
+    logger.info("running prediction")
+    # Get the text included in the request
+    with tracer.start_as_current_span(name="prediction_request_received") as span:
+        text = request.args['text']
+        results = predict_sentiment(text)
+        span.set_attribute("predicted_sentiment", str(results))
+    
+    # Process the text in order to get the sentiment
+    
 
 #chargement du modèle
 clf_model = load_model('./model_lstm_glove.h5')
@@ -87,10 +150,20 @@ app = Flask(__name__)
 def predict():
     text = request.args['text']
     results = predict_sentiment(text)
+
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
-# This is the reoute to the welcome page
-@app.route("/")
-def home():
-    return "Hello, welcome to the sentiment classification API for project 07 !"
+
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    with tracer.start_as_current_span(name="feedback_request_received") as span:
+        prediction = request.args['sentiment']
+        is_correct = request.args['is_correct'] 
+        logger.info("correct_prediction")
+        span.set_attribute('prediction', prediction)
+        span.set_attribute('is_correct', str(is_correct))
+        
+    return jsonify({'status': 'feedback_received'})
+
+
 

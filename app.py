@@ -88,11 +88,9 @@ def predict_sentiment(text):
 
 
 # Configuration analyses Azure
-instrumentation_key = "ec60a799-186d-4345-86af-c5babe81ee62"
-configure_azure_monitor()
-
-
-
+instrumentation_key = "a76e31d9-acf0-4446-9fa2-874cbd600f90"
+configure_azure_monitor(
+    connection_string=f"InstrumentationKey={instrumentation_key}")
 
 # Configuration du tracer
 tracer = trace.get_tracer(__name__)
@@ -118,13 +116,11 @@ def home():
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
     logger.info("running prediction")
-    # Get the text included in the request
     with tracer.start_as_current_span(name="prediction_request_received") as span:
         text = request.args['text']
         results = predict_sentiment(text)
         span.set_attribute("predicted_sentiment", str(results))
     
-    # Process the text in order to get the sentiment
     
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 

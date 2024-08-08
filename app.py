@@ -1,22 +1,19 @@
 import pickle
 import numpy
-
 import re
-
 
 # pre-traitement du text
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-
 from nltk.stem import SnowballStemmer
 
 #Analyses dans Azure
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry import trace
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 import logging
-
 
 
 # Deep learning
@@ -33,9 +30,6 @@ nltk.download('punkt')
 nltk.download('wordnet')
 stop = set(stopwords.words('english'))
 
-
-
-# Fonction pour le preprocessing
 
 def preprocess(text) :
 
@@ -70,13 +64,9 @@ MAX_SEQUENCE_LENGTH =30
 with open("./tokenizer_lstm.pickle", "rb") as file:
     tokenizer = pickle.load(file)
 
-
 # Chargement du modèle
 clf_model = load_model('./model_lstm_glove.h5')
 
-
-
-#Fonction de prédiction
 
 def predict_sentiment(text):
      
@@ -101,7 +91,6 @@ def predict_sentiment(text):
 instrumentation_key = "ec60a799-186d-4345-86af-c5babe81ee62"
 configure_azure_monitor(
     connection_string=f"InstrumentationKey={instrumentation_key}")
-
 
 
 
@@ -138,19 +127,6 @@ def predict():
     
     # Process the text in order to get the sentiment
     
-
-#chargement du modèle
-clf_model = load_model('./model_lstm_glove.h5')
-
-
-#Partie API
-app = Flask(__name__)
-
-@app.route("/predict_sentiment", methods=["POST"])
-def predict():
-    text = request.args['text']
-    results = predict_sentiment(text)
-
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
 
@@ -164,6 +140,5 @@ def feedback():
         span.set_attribute('is_correct', str(is_correct))
         
     return jsonify({'status': 'feedback_received'})
-
 
 

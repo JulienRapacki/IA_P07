@@ -13,8 +13,7 @@ API_URL = "https://p07.azurewebsites.net"
 
 # Configuration du tracer
 
-configure_azure_monitor(
-    connection_string="InstrumentationKey=ec60a799-186d-4345-86af-c5babe81ee62")
+configure_azure_monitor()
 tracer = trace.get_tracer(__name__)
 
 

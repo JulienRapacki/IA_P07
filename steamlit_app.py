@@ -65,7 +65,7 @@ if st.button("Analyser"):
 
 # Affichage du résultat et des boutons de feedback
 if st.session_state.sentiment is not None:
-    st.write(f"Sentiment prédit : {st.session_state.sentiment} , Probabilité : {round(st.session_state.probability,2}")
+    st.write(f"Sentiment prédit : {st.session_state.sentiment} , Probabilité : {round(st.session_state.probability,2)}")
     
     if not st.session_state.feedback_given:
         col1, col2 = st.columns(2)

@@ -1,6 +1,6 @@
 Flask
 nltk
-numpy
+Numpy
 azure-monitor-opentelemetry
 azure-monitor-opentelemetry-exporter
 tensorflow-cpu

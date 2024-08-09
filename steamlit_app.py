@@ -10,7 +10,7 @@ from opentelemetry import trace
 API_URL = "https://p07.azurewebsites.net"
 
 # Configuration du tracer
-instrumentation_key = "a76e31d9-acf0-4446-9fa2-874cbd600f90"
+instrumentation_key = "62ffb7a1-0b9f-4cb6-8e6d-6ab03636e5aa"
 
 configure_azure_monitor(
     connection_string=f"InstrumentationKey={instrumentation_key}")
@@ -32,7 +32,7 @@ def analyze_sentiment():
     with tracer.start_as_current_span("analyze_sentiment") as span:
         response = requests.post(f"{API_URL}/predict_sentiment", params={"text":user_input})
         st.session_state.sentiment = response.json()['sentiment']
-        st.session_state.probability = response.json()['probability']
+        st.session_state.probability = round(response.json()['probability'],2)
         span.set_attribute("text", user_input)
         span.set_attribute("predicted_sentiment", st.session_state.sentiment)
         span.set_attribute("probability", st.session_state.probability)
@@ -44,7 +44,7 @@ if st.button("Analyser"):
 
 # Affichage du résultat et des boutons de feedback
 if st.session_state.sentiment is not None:
-    st.write(f"Sentiment prédit : {st.session_state.sentiment} , Probabilité : {round(st.session_state.probability,2)}")
+    st.write(f"Sentiment prédit : {st.session_state.sentiment} , Probabilité : {st.session_state.probability}")
     
     if not st.session_state.feedback_given:
         col1, col2 = st.columns(2)

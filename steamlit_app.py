@@ -2,10 +2,6 @@ import streamlit as st
 import requests
 
 from opentelemetry.trace import Tracer
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry import environment_variables, metrics, trace
-
-from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
 from azure.monitor.opentelemetry import configure_azure_monitor
 
 # URL de votre API Azure
@@ -16,13 +12,13 @@ instrumentation_key = "a76e31d9-acf0-4446-9fa2-874cbd600f90"
 
 configure_azure_monitor(
     connection_string=f"InstrumentationKey={instrumentation_key}")
+
 tracer = trace.get_tracer(__name__)
 
 if 'sentiment' not in st.session_state:
     st.session_state.sentiment = None
 if 'feedback_given' not in st.session_state:
     st.session_state.feedback_given = False
-
 
 st.title("Analyse de sentiment")
 

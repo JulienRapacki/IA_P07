@@ -3,6 +3,8 @@ import requests
 
 from opentelemetry.trace import Tracer
 from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry import trace
+
 
 # URL de votre API Azure
 API_URL = "https://p07.azurewebsites.net"

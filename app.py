@@ -1,3 +1,4 @@
+Nouveau ! Raccourcis clavier … Les raccourcis clavier de Drive ont été mis à jour pour vous permettre de naviguer à l'aide des premières lettres
 import pickle
 import numpy
 import re
@@ -12,13 +13,15 @@ from nltk.stem import SnowballStemmer
 #Analyses dans Azure
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from azure.monitor.opentelemetry.exporter import AzureMonitorTraceExporter
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 import logging
 
 
 # Deep learning
 import tensorflow as tf
-from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
@@ -93,7 +96,14 @@ instrumentation_key = "62ffb7a1-0b9f-4cb6-8e6d-6ab03636e5aa"
 configure_azure_monitor(
     connection_string=f"InstrumentationKey={instrumentation_key}")
 
+# exporter = AzureMonitorTraceExporter(
+#     connection_string=f"InstrumentationKey={instrumentation_key}")
+
+
 # Configuration du tracer
+# trace.set_tracer_provider(TracerProvider())
+# trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
+
 tracer = trace.get_tracer(__name__)
 
 logger = logging.getLogger(__name__)
@@ -102,7 +112,7 @@ logger = logging.getLogger(__name__)
 
 # partie dédiée à l'API
 app = Flask(__name__)
-
+FlaskInstrumentor().instrument_app(app)
 
 with tracer.start_as_current_span("app_start") as span:
     span.set_attribute("start", "ok")
@@ -117,11 +127,13 @@ def home():
 @app.route("/predict_sentiment", methods=["POST"])
 def predict():
     logger.info("running prediction")
+    # Get the text included in the request
     with tracer.start_as_current_span(name="prediction_request_received") as span:
         text = request.args['text']
         results = predict_sentiment(text)
         span.set_attribute("predicted_sentiment", str(results))
     
+    # Process the text in order to get the sentiment
     
     return jsonify(text=text, sentiment=results[0], probability=str(results[1]))
 
@@ -132,9 +144,8 @@ def feedback():
         prediction = request.args['sentiment']
         is_correct = request.args['is_correct'] 
         logger.info("correct_prediction")
-        span.set_attribute('prediction', prediction)
-        span.set_attribute('is_correct', str(is_correct))
+        span.set_attibute('prediction ok' , str(is_correct))
         
-    return jsonify({'status': 'feedback_received'})
+    return jsonify({'status': 'success'})
 
 
